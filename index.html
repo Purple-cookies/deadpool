@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма Роста - Трекер тренировок</title>
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23D4FF3A' rx='20'/%3E%3Ctext x='50' y='68' font-family='sans-serif' font-size='50' font-weight='bold' fill='%230A0A0A' text-anchor='middle'%3EФР%3C/text%3E%3C/svg%3E">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#" class="logo">
+                <div class="logo-mark">ФР</div>
+                <span class="logo-text">Форма Роста</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#exercises">Упражнения</a>
+                <a href="#programs">Программы</a>
+                <a href="#active-workout">Тренировка</a>
+                <a href="#rating">Рейтинг</a>
+            </nav>
+
+            <div class="header-actions">
+                <button id="authBtn" class="btn btn-primary hidden">Войти</button>
+                
+                <div id="navUserBadge" class="user-badge hidden" onclick="document.getElementById('profileModal').classList.remove('hidden')">
+                    <img id="navUserAvatar" src="" class="user-avatar-mini hidden" alt="Avatar">
+                    <div id="navUserLetter" class="user-avatar-letter"></div>
+                    <span id="userNameText">User</span>
+                </div>
+                
+                <button id="logoutBtn" class="btn btn-ghost btn-sm hidden">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1 id="heroTitle">Прокачай своё тело.<br>Отслеживай каждый шаг.</h1>
+            <p id="heroSubtitle" class="hero-subtitle">Собирай тренировки, зарабатывай очки опыта и соревнуйся с друзьями.</p>
+            
+            <div class="hero-actions">
+                <button id="heroAuthBtn" class="btn btn-accent btn-lg">Начать бесплатно</button>
+                <button id="editProfileBtn" class="btn btn-glass btn-lg hidden" onclick="document.getElementById('profileModal').classList.remove('hidden')">Мой профиль</button>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong id="statXP">0</strong>
+                    <span>Опыт (XP)</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <strong id="statLevel">Новичок</strong>
+                    <span>Уровень</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <strong id="statWorkouts">0</strong>
+                    <span>Тренировок</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="exercises" class="section section-dark">
+        <div class="container">
+            <div class="section-head section-head-light">
+                <span class="section-tag">Каталог</span>
+                <h2 class="section-title">База упражнений</h2>
+                <p class="section-desc">Выбирай упражнения и добавляй их в свой план тренировки.</p>
+            </div>
+
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="exerciseSearch" placeholder="Поиск по названию или мышцам...">
+                </div>
+                <div class="filter-chips">
+                    <button class="chip active" data-filter="all">Все</button>
+                    <button class="chip" data-filter="Грудь">Грудь</button>
+                    <button class="chip" data-filter="Спина">Спина</button>
+                    <button class="chip" data-filter="Ноги">Ноги</button>
+                    <button class="chip" data-filter="Плечи">Плечи</button>
+                    <button class="chip" data-filter="Руки">Руки</button>
+                    <button class="chip" data-filter="Кор">Кор</button>
+                </div>
+            </div>
+
+            <div id="exercisesGrid" class="cards-grid"></div>
+        </div>
+    </section>
+
+    <section id="programs" class="section">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Быстрый старт</span>
+                <h2 class="section-title">Готовые программы</h2>
+                <p class="section-desc">Выбери комплекс и начни тренировку одним кликом. Баллы начисляются за каждое упражнение.</p>
+            </div>
+            <div id="programsGrid" class="cards-grid"></div>
+        </div>
+    </section>
+
+    <section id="active-workout" class="section section-dark">
+        <div class="container">
+            <div class="section-head section-head-light">
+                <span class="section-tag">Текущая цель</span>
+                <h2 class="section-title">Твоя тренировка</h2>
+                <p class="section-desc">Добавляй упражнения вручную или загрузи готовую программу. +100 XP за каждое выполненное упражнение.</p>
+            </div>
+
+            <div class="active-workout-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 id="activeCount">Войди, чтобы начать</h3>
+                    <button class="btn btn-ghost btn-sm" onclick="clearActiveWorkout()">Очистить</button>
+                </div>
+
+                <div id="activeWorkoutList" class="active-list"></div>
+
+                <div id="workoutActions" class="workout-actions" style="display:none;">
+                    <button class="btn btn-accent full-width" onclick="finishWorkout()">
+                        <i class="ri-check-double-line"></i> Выполнить сейчас (+XP за каждое упражнение)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rating" class="section">
+        <div class="container">
+            <div class="section-head">
+                <span class="section-tag">Топ атлетов</span>
+                <h2 class="section-title">Таблица лидеров</h2>
+            </div>
+            
+            <div class="rating-card">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Место</th>
+                            <th>Атлет</th>
+                            <th>Звание</th>
+                            <th>XP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratingTableBody"></tbody>
+                </table>
+                <div id="emptyRating" class="empty-state hidden">
+                    <p>Пока нет зарегистрированных пользователей</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-mark">ФР</div>
+                    <span class="logo-text" style="color:white;">Форма Роста</span>
+                </a>
+                <p>Твой персональный тренер и дневник прогресса.</p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            &copy; 2026 Форма Роста. Все права защищены.
+        </div>
+    </footer>
+
+    <div id="authModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button id="closeAuthModal" class="modal-close"><i class="ri-close-line"></i></button>
+            <div class="modal-head">
+                <div class="modal-logo">ФР</div>
+                <h3 id="authModalTitle">С возвращением!</h3>
+                <p id="authModalSubtitle">Войди, чтобы продолжить путь к результату</p>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="input-group">
+                    <label>Имя пользователя</label>
+                    <div class="input-with-icon">
+                        <i class="ri-user-line"></i>
+                        <input type="text" id="loginName" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <div class="input-with-icon">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="loginPass" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Войти</button>
+                <div class="auth-switch">
+                    Нет аккаунта? <a href="#" id="switchToRegister">Создать</a>
+                </div>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="input-group">
+                    <label>Придумай имя</label>
+                    <div class="input-with-icon">
+                        <i class="ri-user-add-line"></i>
+                        <input type="text" id="regName" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <div class="input-with-icon">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="regPass" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Повтори пароль</label>
+                    <div class="input-with-icon">
+                        <i class="ri-shield-check-line"></i>
+                        <input type="password" id="regPassConfirm" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-accent full-width">Создать аккаунт</button>
+                <div class="auth-switch">
+                    Уже есть аккаунт? <a href="#" id="switchToLogin">Войти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal-overlay hidden">
+        <div class="modal-card profile-modal-card">
+            <button id="closeProfileModal" class="modal-close"><i class="ri-close-line"></i></button>
+            <div class="modal-head">
+                <h3>Редактирование профиля</h3>
+            </div>
+
+            <form id="profileForm">
+                <div style="text-align:center; margin-bottom:24px;">
+                    <label for="avatarInput" class="profile-avatar-wrapper">
+                        <img id="profileAvatarImg" src="" class="profile-avatar-img hidden">
+                        <div id="profileAvatarLetter" class="profile-avatar-letter"></div>
+                        <div class="avatar-edit-badge"><i class="ri-camera-line"></i></div>
+                    </label>
+                    <input type="file" id="avatarInput" accept="image/*" hidden>
+                    <button type="button" id="removeAvatarBtn" class="remove-avatar-btn hidden">
+                        <i class="ri-delete-bin-line"></i> Удалить фото
+                    </button>
+                </div>
+
+                <div class="profile-meta">
+                    <div><span>Уровень</span><strong id="profileLevel">-</strong></div>
+                    <div><span>Опыт</span><strong id="profileXP">-</strong></div>
+                    <div><span>Тренировки</span><strong id="profileWorkouts">-</strong></div>
+                </div>
+
+                <div class="input-group">
+                    <label>Имя пользователя</label>
+                    <div class="input-with-icon">
+                        <i class="ri-user-line"></i>
+                        <input type="text" id="profileName" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>О себе <span class="optional">(необязательно)</span></label>
+                    <textarea id="profileDescription" rows="3" placeholder="Расскажи о своих целях и достижениях..." 
+                        style="width:100%; padding:14px 16px; background:var(--bg-soft); border:2px solid transparent; 
+                        border-radius:14px; font-family:inherit; font-size:14px; resize:vertical; outline:none;"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Текущий пароль <span class="optional">(для подтверждения)</span></label>
+                    <div class="input-with-icon">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="profileCurrentPass" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Новый пароль <span class="optional">(необязательно)</span></label>
+                    <div class="input-with-icon">
+                        <i class="ri-key-line"></i>
+                        <input type="password" id="profileNewPass">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width" style="margin-bottom:12px;">Сохранить изменения</button>
+                
+                <button type="button" id="deleteAccountBtn" class="btn btn-ghost full-width" 
+                    style="color:#EF4444; border-color:#EF4444;">
+                    <i class="ri-delete-bin-line"></i> Удалить аккаунт
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden">
+        <i class="ri-information-fill"></i>
+        <span id="toastMessage">Сообщение</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
